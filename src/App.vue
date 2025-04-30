@@ -5,7 +5,10 @@
         <v-btn to="/" variant="text">Home</v-btn>
         <v-btn to="/astres">Astres</v-btn>
         <v-btn to="/ImageOfTheDay" variant="text">IOTD</v-btn>
-        
+        <v-btn to="/favoris" variant="text">
+          <v-icon left>mdi-star</v-icon>
+          Favoris
+        </v-btn>
       </v-container>
     </v-app-bar>
 
@@ -16,17 +19,5 @@
 </template>
 
 <style>
-html, body {
-  overflow-y: initial;
-  height: 100%;
-}
 
-.v-application {
-  height: 100vh;
-}
-
-.main-content {
-  height: 100%;
-  overflow-y: auto;
-}
 </style>

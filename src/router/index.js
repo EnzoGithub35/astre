@@ -20,6 +20,11 @@ const routes = [
     path: '/astre/:id',
     name: 'astre-details',
     component: () => import('../views/AstreDetailsView.vue')
+  },
+  {
+    path: '/favoris',
+    name: 'favoris',
+    component: () => import('../views/FavorisView.vue')
   }
 ]
 

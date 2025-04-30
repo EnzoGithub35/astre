@@ -48,6 +48,14 @@
             <v-btn color="primary" variant="text">
               Voir les détails
             </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+              :color="isAstreFavorite(astre.id) ? 'warning' : 'grey'"
+              icon
+              @click.stop="toggleFavorite(astre)"
+            >
+              <v-icon>{{ isAstreFavorite(astre.id) ? 'mdi-star' : 'mdi-star-outline' }}</v-icon>
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -115,6 +123,25 @@ export default {
     }
   },
   methods: {
+    isAstreFavorite(astreId) {
+      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      return favorites.some(fav => fav.id === astreId);
+    },
+    
+    toggleFavorite(astre) {
+      let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      const index = favorites.findIndex(fav => fav.id === astre.id);
+      
+      if (index === -1) {
+        favorites.push(astre);
+      } else {
+        favorites.splice(index, 1);
+      }
+      
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      window.location.reload();
+    },
+
     async fetchAstres() {
       try {
         const response = await fetch('https://api.le-systeme-solaire.net/rest/bodies/')
@@ -127,10 +154,12 @@ export default {
         console.error('Error:', error)
       }
     },
+    
     showAstreDetails(astre) {
       this.selectedAstre = astre
       this.dialog = true
     },
+    
     navigateToAstre(astre) {
       this.$router.push(`/astre/${astre.id}`)
     }
