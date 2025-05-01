@@ -99,7 +99,6 @@
 
 <script>
 export default {
-  name: 'AboutView',
   data() {
     return {
       astres: [],
@@ -110,24 +109,26 @@ export default {
         hasMoons: false
       },
       dialog: false,
-      selectedAstre: null
+      selectedAstre: null,
+      favorites: [], // Ajout d'un state local pour les favoris
     }
   },
+
   computed: {
     filteredAstres() {
       return this.astres.filter(astre => {
-        if (this.filters.isPlanet && !astre.isPlanet) return false
-        if (this.filters.hasMoons && !astre.moons) return false
-        return true
-      })
+        if (this.filters.isPlanet && !astre.isPlanet) return false;
+        if (this.filters.hasMoons && (!astre.moons || astre.moons.length === 0)) return false;
+        return true;
+      });
     }
   },
+
   methods: {
     isAstreFavorite(astreId) {
-      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-      return favorites.some(fav => fav.id === astreId);
+      return this.favorites.some(fav => fav.id === astreId);
     },
-    
+
     toggleFavorite(astre) {
       let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
       const index = favorites.findIndex(fav => fav.id === astre.id);
@@ -139,7 +140,12 @@ export default {
       }
       
       localStorage.setItem('favorites', JSON.stringify(favorites));
-      window.location.reload();
+      this.favorites = favorites; // Met à jour le state local
+      this.$forceUpdate(); // Force la mise à jour du composant
+    },
+
+    loadFavorites() {
+      this.favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     },
 
     async fetchAstres() {
@@ -165,7 +171,8 @@ export default {
     }
   },
   mounted() {
-    this.fetchAstres()
+    this.fetchAstres();
+    this.loadFavorites(); // Charge les favoris au montage du composant
   }
 }
 </script>
